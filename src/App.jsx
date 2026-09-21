@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
+import MatrixModeToggle from "./components/MatrixModeToggle";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const Portofolio = lazy(() => import("./Pages/Portofolio"));
@@ -63,8 +64,9 @@ function App() {
     
     <HelmetProvider>
       <div className="pointer-events-none">
-  <AnimatedBackground />
-</div>
+        <AnimatedBackground />
+      </div>
+      <MatrixModeToggle />
       <BrowserRouter>
         <Routes>
           {/* PUBLIC */}

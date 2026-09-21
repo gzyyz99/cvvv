@@ -419,7 +419,48 @@ const AboutPage = () => {
         </a>
       </div>
 
+      <div className="w-full mt-16 overflow-hidden relative" data-aos="fade-up" data-aos-duration="1000">
+        <div className="absolute left-0 top-0 w-12 sm:w-20 h-full bg-gradient-to-r from-[#020b18] to-transparent z-10"></div>
+        <div className="absolute right-0 top-0 w-12 sm:w-20 h-full bg-gradient-to-l from-[#020b18] to-transparent z-10"></div>
+        
+        <p className="text-sm uppercase tracking-widest text-cyan-400/80 mb-6 text-center font-mono">Tech Stack & Tools</p>
+        
+        <div className="flex w-[200%] sm:w-[150%] animate-scroll hover:[animation-play-state:paused]">
+          {[
+            { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+            { name: "OpenCV", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg" },
+            { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
+            { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+            { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+            { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+            { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
+            { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+            // Duplikasi agar efek infinite scroll berjalan mulus
+            { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+            { name: "OpenCV", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg" },
+            { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" },
+            { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
+            { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+            { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+            { name: "Tailwind", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" },
+            { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+          ].map((tech, index) => (
+            <div key={index} className="flex flex-col items-center justify-center w-[120px] sm:w-[150px] flex-shrink-0 gap-2 group opacity-50 hover:opacity-100 transition-all duration-300">
+              <img src={tech.icon} alt={tech.name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain filter grayscale group-hover:grayscale-0 group-hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] transition-all duration-300" />
+              <span className="text-[10px] sm:text-xs font-mono text-gray-500 group-hover:text-cyan-400">{tech.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      
       <style jsx>{`
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+          animation: scroll 20s linear infinite;
+        }
         @keyframes float {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-20px); }
