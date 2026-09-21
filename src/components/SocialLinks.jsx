@@ -26,9 +26,9 @@ const socialLinks = [
   {
     name: "Instagram",
     displayName: "Instagram",
-    subText: "@bagir_ramadhan1",
+    subText: "@bagir_ramadhann",
     icon: Instagram,
-    url: "https://instagram.com/bagir_ramadhan1",
+    url: "https://instagram.com/bagir_ramadhann",
     color: "#E4405F",
     gradient: "from-[#0ea5e9] via-[#06b6d4] to-[#38bdf8]",
   },
@@ -44,16 +44,16 @@ const socialLinks = [
   {
     name: "GitHub",
     displayName: "Github",
-    subText: "Bagir Ramadhan",
+    subText: "@gzyyz99",
     icon: Github,
-    url: "https://github.com",
+    url: "https://github.com/gzyyz99",
     color: "#ffffff",
     gradient: "from-[#333] to-[#24292e]",
   },
   {
     name: "TikTok",
     displayName: "Tiktok",
-    subText: "@bagirramadhan1",
+    subText: "@hanzzyz4",
     icon: ({ className, ...props }) => (
       <svg
         width="24px"
@@ -91,7 +91,7 @@ const socialLinks = [
         </g>
       </svg>
     ),
-    url: "https://www.tiktok.com/@bagirramadhan1",
+    url: "https://www.tiktok.com/@hanzzyz4",
     color: "black",
     gradient: "from-[#000000] via-[#25F4EE] to-[#FE2C55]",
   },

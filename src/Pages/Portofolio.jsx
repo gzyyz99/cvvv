@@ -107,9 +107,9 @@ const defaultProjects = [
     id: 1,
     Title: "Jarvis AI Assistant",
     Description: "Asisten virtual berbasis suara menggunakan Python (Speech Recognition). Mampu membuka aplikasi, memutar musik, dan melakukan pencarian otomatis.",
-    Img: "Coding.gif",
+    Img: "jarvis.gif",
     Link: "https://wa.me/6283106847721",
-    Github: "https://github.com",
+    Github: "https://github.com/gzyyz99",
     Features: [
       "Voice Command Recognition",
       "Automated App & Browser Launcher",
@@ -122,9 +122,9 @@ const defaultProjects = [
     id: 2,
     Title: "Dr. Strange Magic Portal",
     Description: "Sistem pelacakan tangan (Hand Tracking) interaktif menggunakan MediaPipe dan OpenCV untuk memunculkan efek visual portal sihir secara real-time di depan kamera.",
-    Img: "Animation1.gif",
+    Img: "doctor.gif",
     Link: "https://wa.me/6283106847721",
-    Github: "https://github.com",
+    Github: "https://github.com/gzyyz99",
     Features: [
       "Real-time Hand & Gesture Tracking",
       "Interactive Particle VFX (Portal)",
@@ -139,7 +139,7 @@ const defaultProjects = [
     Description: "Instalasi, konfigurasi, dan pemeliharaan jaringan LAN/WLAN saat masa Praktik Kerja Lapangan (PKL), mencakup troubleshooting perangkat keras dan manajemen koneksi.",
     Img: "Coding.gif",
     Link: "https://wa.me/6283106847721",
-    Github: "https://github.com",
+    Github: "https://github.com/gzyyz99",
     Features: [
       "LAN/WLAN Architecture Setup",
       "Hardware Diagnostics & Maintenance",
@@ -147,6 +147,21 @@ const defaultProjects = [
       "Cable Crimping & Network Integrity Testing"
     ],
     TechStack: ["Computer Networking", "Hardware", "Troubleshooting", "Cisco"]
+  },
+  {
+    id: 4,
+    Title: "Captain America Shield",
+    Description: "Sistem pelacakan tangan (Hand Tracking) interaktif menggunakan MediaPipe dan OpenCV untuk memunculkan efek visual tameng Captain America secara real-time.",
+    Img: "shield.gif",
+    Link: "https://wa.me/6283106847721",
+    Github: "https://github.com/gzyyz99",
+    Features: [
+      "Real-time Hand & Gesture Tracking",
+      "Interactive Shield VFX",
+      "Computer Vision Stream Processing",
+      "Dynamic Gesture Activation"
+    ],
+    TechStack: ["Python", "OpenCV", "MediaPipe", "Computer Vision"]
   }
 ];
 
@@ -194,9 +209,17 @@ export default function FullWidthTabs() {
       if (certificatesResponse.error) throw certificatesResponse.error;
 
       // Supabase mengembalikan data dalam properti 'data'
-      const projectData = (projectsResponse.data && projectsResponse.data.length > 0)
-        ? projectsResponse.data
-        : defaultProjects;
+      let projectData = (projectsResponse.data && projectsResponse.data.length > 0)
+        ? [...projectsResponse.data]
+        : [...defaultProjects];
+        
+      // Ensure hardcoded defaultProjects (like Captain America) are shown even if they aren't in Supabase yet
+      const existingTitles = projectData.map(p => p.Title);
+      defaultProjects.forEach(dp => {
+        if (!existingTitles.includes(dp.Title)) {
+          projectData.push(dp);
+        }
+      });
       const certificateData = certificatesResponse.data || [];
 
       setProjects(projectData);

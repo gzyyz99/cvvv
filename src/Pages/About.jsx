@@ -27,46 +27,168 @@ const Header = memo(() => (
   </div>
 ));
 
-const ProfileImage = memo(() => (
-  <div className="flex justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2">
+import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion';
+
+// Kartu ID Interaktif — Bisa di-drag & snap kembali ke posisi awal
+// Kartu ID Interaktif — Drag untuk reveal Spiderman!
+const ProfileImage = memo(() => {
+  // Nilai posisi drag
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
+
+  // Nilai tilt saat hover (terpisah dari drag)
+  const hoverX = useMotionValue(0);
+  const hoverY = useMotionValue(0);
+
+  const hoverXSpring = useSpring(hoverX, { stiffness: 200, damping: 20 });
+  const hoverYSpring = useSpring(hoverY, { stiffness: 200, damping: 20 });
+
+  const rotateX = useTransform(hoverYSpring, [-0.5, 0.5], ["14deg", "-14deg"]);
+  const rotateY = useTransform(hoverXSpring, [-0.5, 0.5], ["-14deg", "14deg"]);
+
+  // Opacity Spiderman berdasarkan seberapa jauh kartu ditarik ke kanan
+  // drag 0px → opacity 0 (tersembunyi), drag 150px ke kanan → opacity 1 (penuh terlihat)
+  const spidermanOpacity = useTransform(dragX, [0, 150], [0, 1]);
+  // Opacity foto normal kebalikannya
+  const normalOpacity = useTransform(dragX, [0, 150], [1, 0]);
+
+  // Glow cyan saat ditarik
+  const glowOpacity = useTransform(dragX, [0, 150], [0, 0.6]);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    hoverX.set((e.clientX - rect.left) / rect.width - 0.5);
+    hoverY.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    hoverX.set(0);
+    hoverY.set(0);
+  };
+
+  // Saat drag selesai, snap balik ke posisi 0,0 dengan animasi spring
+  const handleDragEnd = () => {
+    animate(dragX, 0, { type: "spring", stiffness: 200, damping: 20 });
+    animate(dragY, 0, { type: "spring", stiffness: 200, damping: 20 });
+  };
+
+  return (
     <div 
-      className="relative group" 
+      className="flex justify-center lg:justify-end items-center sm:p-12 sm:py-0 sm:pb-0 p-0 py-2 pb-2"
       data-aos="fade-up"
       data-aos-duration="1000"
     >
-      {/* Optimized gradient backgrounds with reduced complexity for mobile */}
-      <div className="absolute -inset-6 opacity-[25%] z-0 hidden sm:block">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-sky-500 to-blue-600 rounded-full blur-2xl animate-spin-slower" />
-        <div className="absolute inset-0 bg-gradient-to-l from-cyan-500 via-sky-500 to-blue-600 rounded-full blur-2xl animate-pulse-slow opacity-50" />
-        <div className="absolute inset-0 bg-gradient-to-t from-blue-600 via-cyan-500 to-teal-400 rounded-full blur-2xl animate-float opacity-50" />
-      </div>
+      <div className="relative flex flex-col items-center justify-start h-[500px] sm:h-[540px] w-full mt-8 select-none" style={{ perspective: 1200 }}>
+        
+        {/* Tali Lanyard */}
+        <div className="w-1.5 h-20 sm:h-24 bg-gradient-to-b from-cyan-900/60 to-gray-800 rounded-t-full shadow-lg absolute -top-12 z-0"></div>
+        {/* Penjepit */}
+        <div className="w-10 h-4 border-2 border-gray-600 rounded-full absolute top-7 z-0 bg-gray-900/80"></div>
 
-      <div className="relative">
-        <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-[0_0_40px_rgba(120,119,198,0.3)] transform transition-all duration-700 group-hover:scale-105">
-          <div className="absolute inset-0 border-4 border-white/20 rounded-full z-20 transition-all duration-700 group-hover:border-white/40 group-hover:scale-105" />
-          
-          {/* Optimized overlay effects - disabled on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40 z-10 transition-opacity duration-700 group-hover:opacity-0 hidden sm:block" />
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-500/20 via-transparent to-blue-500/20 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 hidden sm:block" />
-          
-          <img
-            src="/Photo.jpg"
-            alt="Profile"
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
-            loading="lazy"
+        {/* Kartu Utama — Draggable */}
+        <motion.div
+          drag
+          dragMomentum={false}
+          style={{ x: dragX, y: dragY, rotateX, rotateY, transformStyle: "preserve-3d" }}
+          onDragEnd={handleDragEnd}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          whileDrag={{ scale: 1.05, cursor: "grabbing" }}
+          className="relative z-10 cursor-grab w-[240px] h-[380px] sm:w-[280px] sm:h-[440px] bg-gradient-to-b from-[#0f172a] to-[#0a0f1e] backdrop-blur-xl rounded-2xl border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex flex-col items-center mt-14 overflow-hidden"
+        >
+          {/* Kilau Glow Merah Spiderman (muncul saat ditarik) */}
+          <motion.div 
+            className="absolute inset-0 rounded-2xl bg-red-500/20 pointer-events-none z-10"
+            style={{ opacity: glowOpacity }}
           />
 
-          {/* Advanced hover effects - desktop only */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 z-20 hidden sm:block">
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-            <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-white/10 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1000 delay-100" />
-            <div className="absolute inset-0 rounded-full border-8 border-white/10 scale-0 group-hover:scale-100 transition-transform duration-700 animate-pulse-slow" />
+          {/* Kilau Cahaya di atas kartu */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none z-10" />
+
+          {/* Lubang tali */}
+          <div className="w-14 h-3 bg-[#020b18] rounded-full mt-4 mb-3 shadow-inner border border-white/10 z-20 relative"></div>
+          
+          {/* Label Badge */}
+          <div className="text-[9px] text-cyan-400 font-mono tracking-[0.3em] uppercase mb-2 opacity-70 z-20 relative">
+            Portfolio — 2026
           </div>
-        </div>
+
+          {/* Container Foto (posisi relative agar overlay bisa di atas) */}
+          <div className="w-40 h-48 sm:w-48 sm:h-56 overflow-hidden rounded-xl border border-white/10 relative z-20">
+            
+            {/* Foto Normal */}
+            <motion.img 
+              src="/Photo.jpg" 
+              alt="Bagir Ramadhan" 
+              style={{ opacity: normalOpacity }}
+              className="absolute inset-0 w-full h-full object-cover scale-105"
+              loading="lazy"
+              draggable="false"
+            />
+
+            {/* Foto Spiderman (muncul saat ditarik ke kanan) */}
+            <motion.img 
+              src="/spiderman.jpg"
+              alt="Spiderman" 
+              style={{ opacity: spidermanOpacity }}
+              className="absolute inset-0 w-full h-full object-cover scale-105"
+              loading="lazy"
+              draggable="false"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
+
+            {/* Overlay gradasi nama */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e]/95 via-[#0a0f1e]/10 to-transparent z-10"></div>
+            <div className="absolute bottom-3 left-3 text-white leading-none z-20">
+              <motion.div 
+                className="text-base sm:text-lg font-bold uppercase tracking-widest"
+                style={{
+                  // Nama ikut berubah saat ditarik
+                  color: useTransform(dragX, [0, 150], ["#ffffff", "#ef4444"])
+                }}
+              >
+                Bagir
+              </motion.div>
+              <motion.div 
+                className="text-base sm:text-lg font-bold uppercase tracking-widest"
+                style={{
+                  color: useTransform(dragX, [0, 150], ["rgba(34,211,238,0.7)", "#ef4444"])
+                }}
+              >
+                Ramadhan
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Info Detail */}
+          <div className="w-full px-5 mt-4 flex flex-col gap-1 z-20 relative">
+            <span className="text-[9px] text-cyan-400/60 font-mono tracking-[0.25em] uppercase">Jabatan</span>
+            <span className="text-xs sm:text-sm font-semibold text-white/90 tracking-wide">IT Network & Python Dev</span>
+          </div>
+
+          {/* Footer Kartu */}
+          <div className="w-full px-5 mt-auto mb-4 pt-3 border-t border-white/8 flex items-center justify-between z-20 relative">
+            <div className="flex gap-1.5 items-center">
+               <div className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)]"></div>
+               <span className="text-[9px] text-cyan-400/60 font-mono tracking-wider uppercase">Active</span>
+            </div>
+            {/* Barcode */}
+            <div 
+              className="h-5 w-24 rounded-sm opacity-30" 
+              style={{ backgroundImage: 'repeating-linear-gradient(to right, white 0, white 2px, transparent 2px, transparent 5px, white 5px, white 6px, transparent 6px, transparent 8px)' }}
+            ></div>
+          </div>
+        </motion.div>
+
+        {/* Hint teks di bawah kartu */}
+        <p className="mt-4 text-[10px] text-gray-600 font-mono tracking-wider animate-pulse">
+          → drag kanan untuk reveal 🕷️
+        </p>
       </div>
     </div>
-  </div>
-));
+  );
+});
+
 
 const StatCard = memo(({ icon: Icon, color, value, label, description, animation }) => (
   <div data-aos={animation} data-aos-duration={1300} className="relative group">
